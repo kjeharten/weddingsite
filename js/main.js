@@ -11,6 +11,9 @@
  * 3. Page dots — bottom-centre indicator that highlights the
  *    current section. Dots are also clickable for navigation.
  *
+ * 4. Typewriter — types the invite intro lines character by
+ *    character on first load.
+ *
  * Progressive enhancement — the site is fully functional without
  * this file (see <noscript> fallback in index.html).
  */
@@ -118,17 +121,88 @@
     });
   }
 
+  /* ----------------------------------------------------------
+     4. Typewriter — type invite intro lines character by character
+     ~50ms per character, 400ms pause between lines.
+     After typing completes, the venue info fade-in is triggered.
+  ---------------------------------------------------------- */
+  var CHAR_DELAY    = 50;   // ms between characters
+  var LINE_PAUSE    = 400;  // ms pause between lines
+  var START_DELAY   = 500;  // ms before first line starts typing
+
+  function initTypewriter() {
+    // Respect reduced motion
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Gather elements in sequence order
+    var elements = Array.prototype.slice.call(
+      document.querySelectorAll('[data-typewriter]')
+    ).sort(function (a, b) {
+      return Number(a.getAttribute('data-typewriter')) - Number(b.getAttribute('data-typewriter'));
+    });
+
+    if (!elements.length) return;
+
+    // Store original text, clear elements, mark as ready
+    var lines = elements.map(function (el) {
+      var text = el.textContent.trim();
+      el.textContent = '';
+      el.classList.add('typewriter-ready');
+      return { el: el, text: text, index: 0 };
+    });
+
+    // Type a single line, resolve when done
+    function typeLine(line) {
+      return new Promise(function (resolve) {
+        line.el.classList.remove('typewriter-ready');
+        line.el.classList.add('typewriter-typing');
+
+        function typeNext() {
+          if (line.index < line.text.length) {
+            line.el.textContent += line.text.charAt(line.index);
+            line.index++;
+            setTimeout(typeNext, CHAR_DELAY);
+          } else {
+            resolve();
+          }
+        }
+        typeNext();
+      });
+    }
+
+    // Sequence: wait → type line 1 → pause → type line 2 → show venue info
+    function runSequence(i) {
+      if (i >= lines.length) {
+        // All lines typed — fade in venue info
+        var venueInfo = document.querySelector('#invite .invite-bottom');
+        if (venueInfo) {
+          setTimeout(function () {
+            venueInfo.classList.add('is-visible');
+          }, 300);
+        }
+        return;
+      }
+      typeLine(lines[i]).then(function () {
+        setTimeout(function () { runSequence(i + 1); }, LINE_PAUSE);
+      });
+    }
+
+    setTimeout(function () { runSequence(0); }, START_DELAY);
+  }
+
   /* Run after DOM is ready */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initFadeIn();
       initScrollHint();
       initPageDots();
+      initTypewriter();
     });
   } else {
     initFadeIn();
     initScrollHint();
     initPageDots();
+    initTypewriter();
   }
 
 })();

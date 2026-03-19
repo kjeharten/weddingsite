@@ -62,6 +62,7 @@
   <noscript>
     <style>
       .fade-in,
+      .fade-in-deferred,
       .fade-in-children > * { opacity: 1 !important; transform: none !important; }
       .page-dots { display: none !important; }
     </style>
@@ -99,8 +100,8 @@
       <div class="invite-content">
 
         <!-- Block 1: "together with their" + calligraphy + "request the honour" -->
-        <div class="invite-names-group fade-in">
-          <p class="intro-line">Together with their loving families</p>
+        <div class="invite-names-group">
+          <p class="intro-line" data-typewriter="1">Together with their loving families</p>
 
           <!--
             Names calligraphy — extracted from Canva as transparent PNG.
@@ -108,20 +109,20 @@
             Remove the placeholder <div> below once the real image is in place.
           -->
           <img
-            class="invite-names"
+            class="invite-names fade-in"
             src="img/elements/names-calligraphy.png"
             alt="Kai and Sharihan"
             width="600"
             height="200"
           >
 
-          <p class="intro-line">
-            request the honour of your presence at<br>their marriage
+          <p class="intro-line" data-typewriter="2">
+            request the honour of your presence at their marriage
           </p>
         </div>
 
         <!-- Block 2: venue info — pinned to bottom -->
-        <div class="venue-info invite-bottom fade-in" aria-label="Wedding venue and date">
+        <div class="venue-info invite-bottom fade-in-deferred" aria-label="Wedding venue and date">
           <time datetime="2026-06-20T15:00">saturday, 20th june 2026 at 3:00pm</time><br>
           <span class="bold-caps">desa oculus</span><br>
           kintamani - bali - indonesia

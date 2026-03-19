@@ -10,7 +10,7 @@
   /* Colour palette */
   --color-earth-brown:     #633621;
   --color-muted-green:     #7A8D78;
-  --color-off-white:       #F7F5F2;
+  --color-off-white:       #F5F4F0;
   --color-page-bg:         #EFEBE8;
   --color-body-text:       #333333;
   --color-subtle-text:     #666666;
@@ -193,6 +193,17 @@ h1, h2, h3 {
   transition: opacity 0.7s ease, transform 0.7s ease; /* enter speed */
 }
 
+/* --- Deferred fade-in — controlled by JS, not IntersectionObserver --- */
+.fade-in-deferred {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in-deferred.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* --- Standard staggered children (~0.13s gap, 0.7s duration) --- */
 .fade-in-children > * {
   opacity: 0;
@@ -371,8 +382,16 @@ h1, h2, h3 {
 
 /* Intro lines inside the names group sit closer to the calligraphy */
 .invite-names-group .intro-line {
-  opacity: 0.6;                 /* slightly more recessive — frames the hero */
   font-size: var(--text-sm);
+  min-height: 1.8em;              /* reserve vertical space while typewriter is running */
+}
+
+/* JS applies this class before typing begins — hides text without layout shift */
+.typewriter-ready {
+  visibility: hidden;
+}
+.typewriter-typing {
+  visibility: visible;
 }
 
 /* Bottom group: venue info — pinned to bottom */
@@ -383,8 +402,7 @@ h1, h2, h3 {
 
 /* Staggered fade-in delays for invite elements */
 #invite .invite-flower      { transition-delay: 0.0s; }
-#invite .invite-names-group { transition-delay: 0.2s; }
-#invite .invite-bottom      { transition-delay: 0.4s; }
+#invite .invite-names       { transition-delay: 0.2s; }
 
 /* Scroll hint — bottom-right corner of invite section */
 .scroll-hint {
@@ -673,6 +691,7 @@ h1, h2, h3 {
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
+  .fade-in-deferred,
   .fade-in-children > *,
   .fade-in-children--slow > * {
     opacity: 1 !important;
@@ -687,5 +706,11 @@ h1, h2, h3 {
 
   .page-dot {
     transition: none !important;
+  }
+
+  /* Show typewriter text immediately — no typing animation */
+  .typewriter-ready,
+  .typewriter-typing {
+    visibility: visible !important;
   }
 }
