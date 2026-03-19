@@ -63,6 +63,7 @@
     <style>
       .fade-in,
       .fade-in-children > * { opacity: 1 !important; transform: none !important; }
+      .page-dots { display: none !important; }
     </style>
   </noscript>
 </head>
@@ -209,6 +210,15 @@
     </section>
 
   </main>
+
+  <!-- Page indicator dots — fixed at bottom centre, driven by JS -->
+  <nav class="page-dots" aria-label="Page navigation">
+    <button class="page-dot is-active" data-target="invite"  aria-label="Invitation"></button>
+    <button class="page-dot"           data-target="attire"  aria-label="Attire"></button>
+    <button class="page-dot"           data-target="timeline" aria-label="Timeline"></button>
+    <button class="page-dot"           data-target="gifts"   aria-label="Gifts"></button>
+  </nav>
+
 </div>
 
 </body>

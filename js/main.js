@@ -8,6 +8,9 @@
  * 2. Scroll hint — hides the bottom-right arrow once the user
  *    has scrolled past the invite section.
  *
+ * 3. Page dots — bottom-centre indicator that highlights the
+ *    current section. Dots are also clickable for navigation.
+ *
  * Progressive enhancement — the site is fully functional without
  * this file (see <noscript> fallback in index.html).
  */
@@ -73,15 +76,59 @@
     observer.observe(invite);
   }
 
+  /* ----------------------------------------------------------
+     3. Page dots — highlight active section + click-to-navigate
+  ---------------------------------------------------------- */
+  function initPageDots() {
+    var dots     = document.querySelectorAll('.page-dot');
+    var sections = document.querySelectorAll('.section');
+    var card     = document.querySelector('.phone-card');
+    if (!dots.length || !sections.length || !card) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    // Map section IDs to their corresponding dot button
+    var dotMap = {};
+    dots.forEach(function (dot) {
+      dotMap[dot.getAttribute('data-target')] = dot;
+    });
+
+    // Observe each section — when >50% visible, mark its dot active
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var dot = dotMap[entry.target.id];
+          if (!dot) return;
+          if (entry.isIntersecting) {
+            dots.forEach(function (d) { d.classList.remove('is-active'); });
+            dot.classList.add('is-active');
+          }
+        });
+      },
+      { root: card, threshold: 0.5 }
+    );
+
+    sections.forEach(function (sec) { observer.observe(sec); });
+
+    // Click handler — smooth-scroll to the target section
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        var target = document.getElementById(dot.getAttribute('data-target'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+
   /* Run after DOM is ready */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initFadeIn();
       initScrollHint();
+      initPageDots();
     });
   } else {
     initFadeIn();
     initScrollHint();
+    initPageDots();
   }
 
 })();

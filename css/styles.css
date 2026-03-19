@@ -427,6 +427,60 @@ h1, h2, h3 {
 
 
 /* ------------------------------------------------------------
+   8b. PAGE DOTS — bottom-centre page indicator
+   Fixed-positioned so they overlay the bottom of the viewport
+   and stay visible while scrolling through sections.
+   ------------------------------------------------------------ */
+.page-dots {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.page-dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: var(--color-earth-brown);
+  opacity: 0.25;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.page-dot.is-active {
+  opacity: 0.65;
+  transform: scale(1.35);
+}
+
+.page-dot:hover,
+.page-dot:focus-visible {
+  opacity: 0.55;
+  outline: none;
+}
+
+.page-dot.is-active:hover,
+.page-dot.is-active:focus-visible {
+  opacity: 0.75;
+}
+
+
+/* ------------------------------------------------------------
    9. SECTION 2 — ATTIRE
    ------------------------------------------------------------ */
 #attire {
@@ -629,5 +683,9 @@ h1, h2, h3 {
   .scroll-hint {
     animation: none;
     opacity: 0.35;
+  }
+
+  .page-dot {
+    transition: none !important;
   }
 }
