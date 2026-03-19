@@ -1,0 +1,633 @@
+/* ============================================================
+   WEDDING SITE — Kai & Sharihan
+   styles.css
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS (CSS Custom Properties)
+   ------------------------------------------------------------ */
+:root {
+  /* Colour palette */
+  --color-earth-brown:     #633621;
+  --color-muted-green:     #7A8D78;
+  --color-off-white:       #F7F5F2;
+  --color-page-bg:         #EFEBE8;
+  --color-body-text:       #333333;
+  --color-subtle-text:     #666666;
+  --color-bank-text:       #888888;
+
+  /* Full attire swatch palette */
+  --swatch-dark-brown:     #5D1F06;
+  --swatch-terracotta:     #B15E39;
+  --swatch-sand:           #C09572;
+  --swatch-moss:           #5F644F;
+  --swatch-sage:           #A3B49B;
+  --swatch-dusty-rose:     #B8897B;
+
+  /* Typography */
+  --font-serif:            'PT Serif', Georgia, serif;
+  --font-script-the:       'Herr Von Muellerhoff', cursive;
+  --font-script-names:     'Monsieur La Doulaise', cursive;
+
+  /* Font sizes */
+  --text-xs:               0.65rem;
+  --text-sm:               0.75rem;
+  --text-base:             0.85rem;
+  --text-md:               1.0rem;
+  --text-lg:               1.2rem;
+  --text-xl:               1.5rem;
+  --text-script:           2.6rem;
+
+  /* Spacing scale */
+  --space-1:               4px;
+  --space-2:               8px;
+  --space-3:               12px;
+  --space-4:               16px;
+  --space-5:               20px;
+  --space-6:               24px;
+  --space-8:               32px;
+  --space-10:              40px;
+  --space-12:              48px;
+  --space-14:              56px;
+
+  /* Letter-spacing presets */
+  --tracking-tight:        0px;
+  --tracking-normal:       1.2px;
+  --tracking-wide:         1.8px;
+  --tracking-wider:        2.5px;
+  --tracking-widest:       5px;
+
+  /* Misc */
+  --card-max-width:        450px;
+  --card-shadow:           0 0 60px rgba(0, 0, 0, 0.10);
+  --transition-fade:       opacity 0.7s ease, transform 0.7s ease;
+}
+
+
+/* ------------------------------------------------------------
+   2. RESET & BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  color: var(--color-body-text);
+  background-color: var(--color-page-bg);
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3 {
+  font-weight: 400;
+}
+
+
+/* ------------------------------------------------------------
+   3. DESKTOP WRAPPER
+   Centers the phone-card on large screens with a warm backdrop
+   ------------------------------------------------------------ */
+.site-wrapper {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-page-bg);
+  /* Subtle linen-style texture via CSS — no image required */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(99, 54, 33, 0.03) 39px,
+      rgba(99, 54, 33, 0.03) 40px
+    );
+  display: flex;
+  justify-content: center;
+}
+
+
+/* ------------------------------------------------------------
+   4. PHONE CARD CONTAINER
+   ------------------------------------------------------------ */
+.phone-card {
+  width: 100%;
+  max-width: var(--card-max-width);
+  background-color: var(--color-off-white);
+  box-shadow: var(--card-shadow);
+
+  /* Scroll-snap container */
+  overflow-y: scroll;
+  scroll-snap-type: y proximity;
+  height: 100vh;
+  height: 100dvh;
+
+  /* Hide scrollbar visually but keep it functional */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE / Edge */
+}
+.phone-card::-webkit-scrollbar {
+  display: none;                  /* Chrome / Safari */
+}
+
+
+/* ------------------------------------------------------------
+   5. SECTION (PAGE)
+   ------------------------------------------------------------ */
+.section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  padding: var(--space-5);
+
+  /* Scroll-snap */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Section backgrounds */
+#invite   { background-color: var(--color-off-white); }
+#attire   { background-image: url('../img/backgrounds/bg-floral.jpg'); background-size: cover; }
+#timeline { background-image: url('../img/backgrounds/bg-floral.jpg'); background-size: cover; }
+#gifts    { background-image: url('../img/backgrounds/bg-floral.jpg'); background-size: cover; }
+
+
+/* ------------------------------------------------------------
+   6. FADE-IN / FADE-OUT ANIMATIONS
+   Enter: slow, staggered. Exit: quick, simultaneous fade.
+   The transition on the base state controls the exit speed.
+   The transition-delay on .is-visible controls the entrance stagger.
+   ------------------------------------------------------------ */
+
+/* --- Single elements --- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease; /* exit speed */
+}
+.fade-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease; /* enter speed */
+}
+
+/* --- Standard staggered children (~0.13s gap, 0.7s duration) --- */
+.fade-in-children > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease; /* exit: quick, no stagger */
+  transition-delay: 0s;
+}
+.fade-in-children.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease; /* enter: full duration */
+}
+.fade-in-children.is-visible > *:nth-child(1) { transition-delay: 0.05s; }
+.fade-in-children.is-visible > *:nth-child(2) { transition-delay: 0.18s; }
+.fade-in-children.is-visible > *:nth-child(3) { transition-delay: 0.31s; }
+.fade-in-children.is-visible > *:nth-child(4) { transition-delay: 0.44s; }
+.fade-in-children.is-visible > *:nth-child(5) { transition-delay: 0.57s; }
+.fade-in-children.is-visible > *:nth-child(6) { transition-delay: 0.70s; }
+.fade-in-children.is-visible > *:nth-child(7) { transition-delay: 0.83s; }
+
+/* --- Slow staggered children (0.22s gap, 1s duration) for secondary sections --- */
+.fade-in-children--slow > * {
+  transition: opacity 0.4s ease, transform 0.4s ease; /* exit: quick, no stagger */
+  transition-delay: 0s;
+}
+.fade-in-children--slow.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1s ease, transform 1s ease;     /* enter: slow duration */
+}
+.fade-in-children--slow.is-visible > *:nth-child(1)  { transition-delay: 0.05s; }
+.fade-in-children--slow.is-visible > *:nth-child(2)  { transition-delay: 0.27s; }
+.fade-in-children--slow.is-visible > *:nth-child(3)  { transition-delay: 0.49s; }
+.fade-in-children--slow.is-visible > *:nth-child(4)  { transition-delay: 0.71s; }
+.fade-in-children--slow.is-visible > *:nth-child(5)  { transition-delay: 0.93s; }
+.fade-in-children--slow.is-visible > *:nth-child(6)  { transition-delay: 1.15s; }
+.fade-in-children--slow.is-visible > *:nth-child(7)  { transition-delay: 1.37s; }
+.fade-in-children--slow.is-visible > *:nth-child(8)  { transition-delay: 1.59s; }
+.fade-in-children--slow.is-visible > *:nth-child(9)  { transition-delay: 1.81s; }
+
+
+/* ------------------------------------------------------------
+   7. SHARED TYPOGRAPHY
+   ------------------------------------------------------------ */
+.text-script-the {
+  font-family: var(--font-script-the);
+  font-size: var(--text-script);
+  color: var(--color-muted-green);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: -15px;         /* tuck under the section heading */
+  line-height: 1;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-earth-brown);
+  text-transform: uppercase;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.intro-line {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  text-transform: lowercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-subtle-text);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.body-text {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  letter-spacing: 1.5px;
+  line-height: 2;
+  padding: 0 var(--space-6);
+  margin: var(--space-3) 0;
+  color: var(--color-body-text);
+}
+
+.body-text--bold {
+  font-weight: 700;
+}
+
+.venue-info {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  line-height: 2.2;
+  color: var(--color-body-text);
+}
+
+.bold-caps {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+
+/* ------------------------------------------------------------
+   8. SECTION 1 — INVITE
+   ------------------------------------------------------------ */
+#invite {
+  justify-content: flex-start;
+  gap: 0;                      /* all spacing handled explicitly below */
+  padding-top: var(--space-4);
+}
+
+/* Top floral element */
+.invite-flower {
+  width: 45%;
+  max-width: 180px;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Placeholder shown until the real image is dropped in */
+.invite-flower--placeholder {
+  width: 45%;
+  max-width: 180px;
+  aspect-ratio: 4 / 3;
+  background-color: rgba(122, 141, 120, 0.12);
+  border: 1.5px dashed var(--color-muted-green);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted-green);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* Names calligraphy image */
+.invite-names {
+  width: 100%;
+  max-width: 500px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.invite-names--placeholder {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 3 / 1;
+  background-color: rgba(99, 54, 33, 0.06);
+  border: 1.5px dashed var(--color-earth-brown);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-earth-brown);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* Invite content stack — wraps names-group and venue */
+.invite-content {
+  display: contents; /* dissolve the wrapper so #invite's flex applies to all children directly */
+}
+
+/* Visual block: "together with their" + calligraphy + "request the honour" */
+.invite-names-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);          /* tight — 12px between the three elements */
+  margin-top: var(--space-8);   /* large gap separating flower from content block */
+}
+
+/* Intro lines inside the names group sit closer to the calligraphy */
+.invite-names-group .intro-line {
+  opacity: 0.6;                 /* slightly more recessive — frames the hero */
+  font-size: var(--text-sm);
+}
+
+/* Bottom group: venue info — pinned to bottom */
+.invite-bottom {
+  margin-top: auto;
+  padding-bottom: var(--space-8);
+}
+
+/* Staggered fade-in delays for invite elements */
+#invite .invite-flower      { transition-delay: 0.0s; }
+#invite .invite-names-group { transition-delay: 0.2s; }
+#invite .invite-bottom      { transition-delay: 0.4s; }
+
+/* Scroll hint — bottom-right corner of invite section */
+.scroll-hint {
+  position: absolute;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  cursor: pointer;
+  color: var(--color-earth-brown);
+  opacity: 0.35;
+  animation: heartbeat 2.6s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  line-height: 0;
+}
+
+.scroll-hint:hover,
+.scroll-hint:focus-visible {
+  opacity: 0.7;
+  outline: none;
+}
+
+/* Heartbeat: two quick pulses then a long rest — like a pulse */
+@keyframes heartbeat {
+  0%   { transform: translateY(0);   opacity: 0.35; }
+  18%  { transform: translateY(3px); opacity: 0.55; }
+  36%  { transform: translateY(0);   opacity: 0.35; }
+  52%  { transform: translateY(3px); opacity: 0.55; }
+  70%  { transform: translateY(0);   opacity: 0.35; }
+  100% { transform: translateY(0);   opacity: 0.35; }
+}
+
+/* Hide once the user has scrolled off the invite section */
+.scroll-hint.is-hidden {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+
+/* ------------------------------------------------------------
+   9. SECTION 2 — ATTIRE
+   ------------------------------------------------------------ */
+#attire {
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+
+/* The slow wrapper fills the section so palette can push to bottom */
+#attire .fade-in-children--slow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.palette {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 85%;
+  margin-top: auto;
+  margin-bottom: var(--space-12);
+}
+
+.swatch {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+
+/* ------------------------------------------------------------
+   10. SECTION 3 — TIMELINE
+   ------------------------------------------------------------ */
+#timeline {
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+
+#timeline .fade-in-children--slow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.timeline-wrapper {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-10);
+  max-height: 65%;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background-color: var(--color-earth-brown);
+  transform: translateX(-50%);
+}
+
+.timeline-event {
+  position: absolute;
+  width: 42%;
+}
+
+.timeline-event--right {
+  left: 55%;
+  text-align: left;
+}
+
+.timeline-event--right::before {
+  content: '';
+  position: absolute;
+  left: -12%;
+  top: 10px;
+  width: 15px;
+  height: 1.5px;
+  background-color: var(--color-earth-brown);
+}
+
+.timeline-event--left {
+  right: 55%;
+  text-align: right;
+}
+
+.timeline-event--left::before {
+  content: '';
+  position: absolute;
+  right: -12%;
+  top: 10px;
+  width: 15px;
+  height: 1.5px;
+  background-color: var(--color-earth-brown);
+}
+
+.timeline-time {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  display: block;
+  color: var(--color-earth-brown);
+}
+
+.timeline-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  line-height: 1.5;
+  color: #444;
+}
+
+
+/* ------------------------------------------------------------
+   11. SECTION 4 — GIFTS
+   ------------------------------------------------------------ */
+#gifts {
+  justify-content: flex-start;
+  padding-top: 150px;
+}
+
+/* The slow wrapper fills the section so bank details can push to bottom */
+#gifts .fade-in-children--slow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.bank-details {
+  margin-top: auto;
+  padding-bottom: var(--space-10);
+  padding-left: var(--space-10);
+  padding-right: var(--space-10);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-bank-text);
+  text-transform: uppercase;
+  text-align: center;
+  list-style: none;         /* reset dl default */
+}
+
+.bank-details__row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  line-height: 2.4;
+}
+
+.bank-details__label {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.bank-details__value {
+  /* dd has a default margin-left in some browsers — reset it */
+  margin: 0;
+}
+
+
+/* ------------------------------------------------------------
+   12. UTILITY CLASSES
+   ------------------------------------------------------------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ------------------------------------------------------------
+   13. ACCESSIBILITY — REDUCED MOTION
+   Respects the OS "reduce motion" setting by disabling all
+   transitions and showing content immediately.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in-children > *,
+  .fade-in-children--slow > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scroll-hint {
+    animation: none;
+    opacity: 0.35;
+  }
+}
