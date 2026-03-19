@@ -132,7 +132,7 @@ h1, h2, h3 {
 
   /* Scroll-snap container */
   overflow-y: scroll;
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   height: 100vh;
   height: 100dvh;
 

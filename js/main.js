@@ -31,6 +31,11 @@
       return;
     }
 
+    // Use .phone-card as the root so intersection is relative to the
+    // actual scroll container rather than the viewport (fixes delayed
+    // fade-in during scroll-snap on mobile).
+    var root = document.querySelector('.phone-card');
+
     const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -41,7 +46,7 @@
           }
         });
       },
-      { threshold: THRESHOLD }
+      { threshold: THRESHOLD, root: root }
     );
 
     elements.forEach(function (el) { observer.observe(el); });
@@ -55,12 +60,14 @@
     const invite = document.getElementById('invite');
     if (!hint || !invite || !('IntersectionObserver' in window)) return;
 
+    var root = document.querySelector('.phone-card');
+
     const observer = new IntersectionObserver(
       function (entries) {
         // When invite section is no longer intersecting, hide the hint
         hint.classList.toggle('is-hidden', !entries[0].isIntersecting);
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, root: root }
     );
 
     observer.observe(invite);
